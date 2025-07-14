@@ -2,54 +2,70 @@ import React, { useState } from 'react';
 import './Form.css';
 import Button from './Button';
 
-function Formulario({ setCitas, citas }) {
-  const [nombreMascota, setNombre] = useState('');
-  const [nombreDueño, setDueño] = useState('');
-  const [fecha, setFecha] = useState('');
-  const [hora, setHora] = useState('');
-  const [sintomas, setSintomas] = useState('');
 
-  const agregarCita = (event) => {
+function Formulario({ setEventos, eventos }) {
+  const [nombre, setNombre] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [categoria, setCategoria] = useState('');
+  const [fechaInicio, setFecha] = useState('');
+  const [duracion, setDuracion] = useState('');
+  const [precio, setPrecio] = useState('');
+  const [habilitado, setHabilitado] = useState('');
+  const [capacidad, setCapacidad] = useState('');
+  const [creador, setCreador] = useState('');
+
+
+
+  const agregarEvento = (event) => {
     event.preventDefault();
 
-    const nuevaCita = {
-      nombreMascota,
-      nombreDueño,
-      fecha,
-      hora,
-      sintomas,
+    const nuevoEvento = {
+        nombre, descripcion, categoria, fechaInicio, duracion, precio, habilitado, capacidad, creador
     };
 
-    const nuevasCitas = [...citas, nuevaCita];
-    setCitas(nuevasCitas);
+    const nuevosEventos = [...eventos, nuevoEvento];
+    setEventos(nuevosEventos);
 
     setNombre('');
-    setDueño('');
+    setDescripcion('');
+    setCategoria('');
     setFecha('');
-    setHora('');
-    setSintomas('');
+    setDuracion('');
+    setPrecio('');
+    setHabilitado('');
+    setCapacidad('');
+    setCreador('');
   };
 
   return (
     <div className="one-half column">
-      <h2>Crear mi Cita</h2>
+      <h2>Crear Evento</h2>
       <form>
-        <label>Nombre Mascota</label>
-        <input type="text" value={nombreMascota} className="mascot" placeholder="Nombre Mascota" id="nombre" onChange={ev => setNombre(ev.target.value)} />
+        <label>Nombre</label>
+        <input type="text" value={nombre} className="mascot" placeholder="Nombre Evento" id="nombre" onChange={ev => setNombre(ev.target.value)} />
 
-        <label>Nombre Dueño</label>
-        <input type="text" value={nombreDueño} className="u-full-width" placeholder="Nombre dueño de la mascota" id="dueño" onChange={ev => setDueño(ev.target.value)} />
+        <label>Descripcion</label>
+        <input type="text" value={descripcion} className="u-full-width" placeholder="Descripcion del Evento" id="descripcion" onChange={ev => setDescripcion(ev.target.value)} />
+
+        <label>Categoria</label>
+        {/* onChange={ev => setDescripcion(ev.target.value)} /> CAMBIAR A MENU OPCIONES */}
 
         <label>Fecha</label>
-        <input type="date" value={fecha} className="u-full-width" id="date" onChange={ev => setFecha(ev.target.value)} />
+        <input type="date" value={fechaInicio} className="u-full-width" id="date" onChange={ev => setFecha(ev.target.value)} />
 
-        <label>Hora</label>
-        <input type="time" value={hora} className="u-full-width" id="time" onChange={ev => setHora(ev.target.value)} />
+        <label>Duracion</label>
+        <input type="number" value={duracion} className="u-full-width" id="time" onChange={ev => setDuracion(ev.target.value)} />
 
-        <label>Sintomas</label>
-        <textarea value={sintomas} className="u-full-width" id="sintomas" onChange={ev => setSintomas(ev.target.value)}></textarea>
+        <label>Precio</label>
+        <input type="number" value={precio} className="u-full-width" id="precio" onChange={ev => setPrecio(ev.target.value)} />
 
-        <Button onClick={agregarCita} />
+        <label>¿Está habilitado para anotarse?</label>
+        <input type="checkbox" checked={habilitado} onChange={ev => setHabilitado(ev.target.checked)} />
+
+        <label>Capacidad</label>
+        <input type="number" value={capacidad} className="u-full-width" id="capacidad" onChange={ev => setCapacidad(ev.target.value)} />
+
+        <Button onClick={agregarEvento} />
       </form>
     </div>
   );

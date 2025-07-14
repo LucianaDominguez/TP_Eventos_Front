@@ -1,36 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import Formulario from './components/Formulario';
-import ListadoCitas from './components/Citas/ListadoCitas';
+import ListadoEventos from './components/Eventos/ListadoEventos';
 import './App.css';
 
 function App() {
-  const [citas, setCitas] = useState(() => {
+  const [eventos, setEventos] = useState(() => {
     try {
-      const citasGuardadas = localStorage.getItem('citas');
-      const parsed = JSON.parse(citasGuardadas);
+      const eventosGuardados = localStorage.getItem('eventos');
+      const parsed = JSON.parse(eventosGuardados);
       return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
-      console.error("Error al cargar citas desde localStorage:", error);
+      console.error("Error al cargar eventos desde localStorage:", error);
       return [];
     }
   });
 
   useEffect(() => {
-    localStorage.setItem('citas', JSON.stringify(citas));
-  }, [citas]);
+    localStorage.setItem('eventos', JSON.stringify(eventos));
+  }, [eventos]);
 
-  const eliminarCita = (index) => {
-    const nuevasCitas = [...citas];
-    nuevasCitas.splice(index, 1);
-    setCitas(nuevasCitas);
+  const eliminarEventos = (index) => {
+    const nuevosEventos = [...eventos];
+    nuevosEventos.splice(index, 1);
+    setEventos(nuevosEventos);
   };
 
   return (
     <div className="container">
-      <h1>Administrador de Pacientes</h1>
+      <h1>Administrador de Eventos</h1>
       <div className="row">
-        <Formulario setCitas={setCitas} citas={citas} />
-        <ListadoCitas citas={citas} eliminarCita={eliminarCita} />
+        <Formulario setEventos={setEventos} eventos={eventos} />
+        <ListadoEventos eventos={eventos} eliminarEventos={eliminarEventos} />
       </div>
     </div>
   );
