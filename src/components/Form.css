@@ -1,0 +1,33 @@
+
+
+label {
+    color: white;
+  }
+
+  input[type="date"],
+  input[type="time"] {
+    height: 38px;
+    padding: 6px 10px;
+    background-color: #fff;
+    border: 1px solid #D1D1D1;
+    border-radius: 4px;
+    box-shadow: none;
+    box-sizing: border-box;
+  }
+
+  h1,
+      h2 {
+        color: white;
+        padding: 3rem 0;
+        text-align: center;
+
+        text-transform: uppercase;
+
+        font-family: 'Staatliches', cursive;
+        letter-spacing: 1px;
+      }
+
+.mascot{
+  width: 100%;
+  margin-right: 60px;
+}
