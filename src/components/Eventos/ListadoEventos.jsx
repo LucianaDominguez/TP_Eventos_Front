@@ -1,5 +1,4 @@
 import React from 'react';
-import Evento from './Evento';
 
 function ListadoEventos({ eventos, eliminarEventos }) {
   return (
