@@ -198,20 +198,20 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    padding: "100px 92px",
+    padding: "180px 182px",
     position: "relative",
-    minWidth: "600px",
+    minWidth: "900px",
     boxSizing: "border-box",
   },
   logoStar: {
-    fontSize: "52px",
+    fontSize: "82px",
     fontWeight: "bold",
     marginBottom: "32px",
     marginTop: "-40px",
     letterSpacing: "2px"
   },
   helloText: {
-    fontSize: "42px",
+    fontSize: "82px",
     fontWeight: "700",
     lineHeight: "1.1",
     margin: 0,
@@ -220,7 +220,7 @@ const styles = {
     letterSpacing: "0px"
   },
   wave: {
-    fontSize: "38px",
+    fontSize: "58px",
     marginLeft: "10px",
     verticalAlign: "middle"
   },
@@ -262,20 +262,21 @@ const styles = {
     alignItems: "stretch",
   },
   logoRight: {
-    fontSize: "26px",
+    fontSize: "56px",
     fontWeight: "700",
     letterSpacing: "-1px",
     margin: "0 0 18px 0",
     color: "#212b36",
   },
   welcome: {
-    fontSize: "22px",
+    fontSize: "33px",
     fontWeight: "700",
     margin: "0 0 10px 0",
     color: "#212b36",
   },
   accountText: {
-    fontSize: "14px",
+    fontSize: "15px",
+    fontWeight: "100",
     color: "#666",
     marginBottom: "18px",
     lineHeight: "1.4"

@@ -65,9 +65,11 @@ const CreateEvent = () => {
     setErrors({});
     setSuccess(false);
 
+    const url = new URL (`${API_BASE_URL}/api/event`)
+
     try {
       await axios.post(
-        `${API_BASE_URL}/api/event`,
+        url.toString(),
         {
           ...form,
           id_creator_user: user.id,
@@ -82,7 +84,7 @@ const CreateEvent = () => {
       );
       setSuccess(true);
       setTimeout(() => {
-        navigate("/eventos");
+        navigate("/events");
       }, 600);
     } catch (err) {
       setErrors({
@@ -97,24 +99,10 @@ const CreateEvent = () => {
 
   return (
     <div style={styles.layout}>
-      {/* Left section */}
-      <div style={styles.leftSection}>
-        <div style={styles.logoStar}>✱</div>
-        <h1 style={styles.helloText}>
-          Crear<br />Evento!<span style={styles.wave}>🎉</span>
-        </h1>
-        <p style={styles.description}>
-          Organiza tu propio evento, define la fecha, lugar, precio y todo lo que necesitas.<br />
-          ¡Hazlo realidad y comparte tu propuesta!
-        </p>
-        <div style={styles.leftFooter}>
-          © 2025 Wave. All rights reserved.
-        </div>
-      </div>
+      
       {/* Right section */}
       <div style={styles.rightSection}>
         <div style={styles.formContainer}>
-          <h2 style={styles.logoRight}>Wave</h2>
           <h3 style={styles.welcome}>Nuevo Evento</h3>
           <form onSubmit={handleSubmit}>
             <div style={styles.field}>
@@ -236,6 +224,7 @@ const styles = {
     minHeight: "100vh",
     fontFamily: "'Inter', 'Roboto', Arial, sans-serif",
     background: "#f4f6f8",
+    justifyContent:"center",
   },
   leftSection: {
     flex: 1,
@@ -299,13 +288,14 @@ const styles = {
   },
   formContainer: {
     width: "100%",
-    maxWidth: "355px",
+    maxWidth:"500px",
     background: "#fff",
     padding: "32px 18px 18px 18px",
     borderRadius: "16px",
     display: "flex",
     flexDirection: "column",
     alignItems: "stretch",
+    justifyContent:"center"
   },
   logoRight: {
     fontSize: "26px",
