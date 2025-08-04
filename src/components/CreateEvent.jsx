@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from '../services/api';
-import { useAuth } from "../context/useAuth"
+//import { useAuth } from "../context/useAuth"
 
 const CreateEvent = () => {
-  const { user, token } = useAuth();
+  //const { user, token } = useAuth();
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -20,6 +20,7 @@ const CreateEvent = () => {
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -65,14 +66,19 @@ const CreateEvent = () => {
     setErrors({});
     setSuccess(false);
 
+    const token = sessionStorage.getItem("token"); //TESTEADO OK
+    const userID = localStorage.getItem("user");
+
     const url = new URL (`${API_BASE_URL}/api/event`)
 
     try {
+      console.log("url", url)
       await axios.post(
         url.toString(),
         {
           ...form,
-          id_creator_user: user.id,
+          id_creator_user: userID,
+
         },
         {
           headers: {
@@ -82,6 +88,8 @@ const CreateEvent = () => {
           },
         }
       );
+      console.log("userID", userID)
+
       setSuccess(true);
       setTimeout(() => {
         navigate("/events");

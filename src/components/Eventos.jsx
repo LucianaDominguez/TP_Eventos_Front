@@ -14,6 +14,8 @@ const EventList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    
+
     const getEvents = async () => {
       try {
         const url = new URL(`${API_BASE_URL}/api/event`);

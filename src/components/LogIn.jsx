@@ -60,6 +60,10 @@ const LogIn = () => {
       );
 
       console.log("Login response:", response.data);
+      sessionStorage.setItem("token", response.data.token);
+      sessionStorage.setItem("user", response.data.ID);
+
+
       setSuccess(true);
       setTimeout(() => {
         navigate("/events");
