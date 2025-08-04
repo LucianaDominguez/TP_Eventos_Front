@@ -1,73 +1,148 @@
 import React from "react";
 
-
 const EventCard = ({ evento, onClick }) => {
   if (!evento) return null;
 
+  // Formato para precio
+  const priceTag =
+    evento.price === 0
+      ? "Gratis"
+      : `$${evento.price.toLocaleString("es-AR", {
+          minimumFractionDigits: 0,
+        })}`;
+
+  // Formato para estado de inscripción
+  const enrollment =
+    evento.enabled_for_enrollment ? "Inscripción abierta" : "Inscripción cerrada";
+
+  // Formato para fecha y duración
+  const dateStr = new Date(evento.start_date).toLocaleDateString();
+  const durationStr = `${evento.duration_in_minutes} min`;
+
   return (
     <div style={styles.card} onClick={onClick}>
-      
-      <div style={styles.content}>
-        <h3 style={styles.title}>{evento.name}</h3>
-        <p style={styles.dateLocation}>
-          <span>{new Date(evento.start_date).toLocaleDateString()}</span>
-        </p>
-        <p style={styles.description}>{evento.description}</p>
+      <div style={styles.gradientBorder}>
+        <div style={styles.content}>
+          <h3 style={styles.title}>{evento.name}</h3>
+          <p style={styles.description}>{evento.description}</p>
+
+          <div style={styles.infoRow}>
+            <div style={styles.infoBlock}>
+              <span style={styles.label}>Fecha</span>
+              <span style={styles.value}>{dateStr}</span>
+            </div>
+            <div style={styles.infoBlock}>
+              <span style={styles.label}>Duración</span>
+              <span style={styles.value}>{durationStr}</span>
+            </div>
+          </div>
+
+          <div style={styles.infoRow}>
+            <div style={styles.infoBlock}>
+              <span style={styles.label}>Cupo máx</span>
+              <span style={styles.value}>{evento.max_assistance}</span>
+            </div>
+            <div style={styles.infoBlock}>
+              <span style={styles.label}>Precio</span>
+              <span style={styles.value}>{priceTag}</span>
+            </div>
+          </div>
+
+          <div style={styles.enrollment}>
+            <span>{enrollment}</span>
+          </div>
+        </div>
       </div>
     </div>
-    
   );
 };
 
 const styles = {
   card: {
-    background: "#fff",
-    borderRadius: "16px",
-    boxShadow: "0 3px 16px rgba(60,72,88,0.16)",
-    overflow: "hidden",
-    maxWidth: 350,
-    minWidth: 280,
-    margin: "16px auto",
+    background: "linear-gradient(135deg, #eaf6fb 0%, #f6eaff 100%)",
+    borderRadius: "20px",
+    boxShadow: "0 6px 24px rgba(60,72,88,0.12)",
+    overflow: "visible",
+    maxWidth: 370,
+    minWidth: 300,
+    margin: "26px auto",
     cursor: "pointer",
-    transition: "transform 0.15s, box-shadow 0.15s",
+    transition: "transform 0.18s, box-shadow 0.18s",
     display: "flex",
     flexDirection: "column",
     minHeight: "fit-content",
+    border: "none",
+    position: "relative",
   },
-  imageContainer: {
-    width: "100%",
-    height: "180px",
-    overflow: "hidden",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    display: "block",
+  gradientBorder: {
+    borderRadius: "18px",
+    background: "linear-gradient(135deg, #56CCF2 0%, #B16CEA 100%)",
+    padding: "2px",
+    boxShadow: "0 2px 16px rgba(87, 78, 164, 0.09)",
   },
   content: {
-    padding: "20px",
+    background: "#fff",
+    borderRadius: "16px",
+    padding: "24px",
     display: "flex",
     flexDirection: "column",
     flex: 1,
+    boxShadow: "0 0 0 transparent",
   },
   title: {
     margin: 0,
-    fontSize: "1.35rem",
+    fontSize: "1.6rem",
     fontWeight: "700",
-    color: "#1a2233",
-  },
-  dateLocation: {
-    fontSize: "0.97rem",
-    color: "#697386",
-    margin: "10px 0",
-    fontWeight: "500",
+    color: "#5546A7",
+    letterSpacing: "0.02em",
+    marginBottom: "6px",
   },
   description: {
-    fontSize: "1rem",
+    fontSize: "1.08rem",
     color: "#374151",
-    margin: 0,
+    margin: "8px 0 18px 0",
     flex: 1,
+    lineHeight: "1.5",
+  },
+  infoRow: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: "12px",
+    margin: "7px 0",
+  },
+  infoBlock: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    background: "#f5f6fa",
+    borderRadius: "10px",
+    padding: "7px 16px",
+    minWidth: "110px",
+    boxShadow: "0 1px 4px rgba(60,72,88,0.05)",
+  },
+  label: {
+    fontSize: "0.93rem",
+    color: "#6C47FF",
+    fontWeight: "600",
+    marginBottom: "2px",
+    letterSpacing: "0.01em",
+  },
+  value: {
+    fontSize: "1rem",
+    color: "#1a2233",
+    fontWeight: "500",
+  },
+  enrollment: {
+    marginTop: "15px",
+    padding: "7px 0",
+    textAlign: "center",
+    fontSize: "1.07rem",
+    fontWeight: "600",
+    color: "#5546A7",
+    background: "#efeafe",
+    borderRadius: "10px",
+    letterSpacing: "0.01em",
   },
 };
 

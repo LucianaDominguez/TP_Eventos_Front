@@ -14,7 +14,7 @@ const EventList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    
+
 
     const getEvents = async () => {
       try {
@@ -92,7 +92,6 @@ const EventList = () => {
       width: '100%',
       margin: '0 auto',
       padding: '32px 16px',
-      background: 'linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%)',
       minHeight: '100vh',
     }}>
       <div style={{
