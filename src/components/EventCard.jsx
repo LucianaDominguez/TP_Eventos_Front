@@ -1,8 +1,11 @@
 import React from "react";
+import axios from "axios"
+import { API_BASE_URL } from '../services/api';
 
 const EventCard = ({ evento, onClick }) => {
   if (!evento) return null;
 
+  const userID = sessionStorage.getItem("user");
   // Formato para precio
   const priceTag =
     evento.price === 0
@@ -18,6 +21,23 @@ const EventCard = ({ evento, onClick }) => {
   // Formato para fecha y duración
   const dateStr = new Date(evento.start_date).toLocaleDateString();
   const durationStr = `${evento.duration_in_minutes} min`;
+
+  const handleDelete = async (e) => {
+    e.stopPropagation(); // Prevent triggering onClick for card
+    if (!window.confirm("¿Estás seguro de que deseas eliminar este evento?")) return;
+    try {
+      const token = sessionStorage.getItem("token");
+      await axios.delete(`${API_BASE_URL}/api/event/${evento.id}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": 1
+        }
+      });
+    } catch (err) {
+      console.log(err)
+      alert("Error al eliminar el evento.");
+    }
+  };
 
   return (
     <div style={styles.card} onClick={onClick}>
@@ -51,6 +71,27 @@ const EventCard = ({ evento, onClick }) => {
           <div style={styles.enrollment}>
             <span>{enrollment}</span>
           </div>
+          <small>creator: {evento.id_creator_user}, you: {userID}</small> //Para checkear
+
+          {/* Only show delete button for creator */}
+          {String(evento.id_creator_user) === String(userID) && (
+            <button
+              style={{
+                marginTop: 14,
+                background: "#d32f2f",
+                color: "#fff",
+                border: "none",
+                borderRadius: "7px",
+                padding: "7px 18px",
+                fontWeight: 600,
+                cursor: "pointer",
+                fontSize: "1.02rem"
+              }}
+              onClick={handleDelete}
+            >
+              Eliminar
+            </button>
+          )}
         </div>
       </div>
     </div>
