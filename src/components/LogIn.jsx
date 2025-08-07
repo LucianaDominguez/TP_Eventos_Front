@@ -63,6 +63,7 @@ const LogIn = () => {
       sessionStorage.setItem("token", response.data.token);
       sessionStorage.setItem("user", response.data.ID);
 
+      console.log(sessionStorage)
 
       setSuccess(true);
       setTimeout(() => {

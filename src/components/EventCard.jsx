@@ -31,7 +31,7 @@ const EventCard = ({ evento, onClick}) => {
         await axios.delete(url.toString(), {
           responseType: 'json',
           headers: {
-            "Bearer Token": sessionStorage.getItem("token"),
+            "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
             "ngrok-skip-browser-warning": 1
           }
         });
