@@ -5,7 +5,7 @@ import { API_BASE_URL } from "../services/api";
 import { Riple } from "react-loading-indicators";
 
 const AVATAR_URL =
-  "https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png";
+  "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=";
 
 const styles = {
   mainBg: {
@@ -252,6 +252,8 @@ const styles = {
   }
 };
 
+// ...styles igual que antes...
+
 const DetailEvent = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -259,6 +261,11 @@ const DetailEvent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hover, setHover] = useState(false);
+
+  // estado para la inscripción:
+  const [joining, setJoining] = useState(false);
+  const [joinError, setJoinError] = useState(null);
+  const [joined, setJoined] = useState(false);
 
   useEffect(() => {
     const url = new URL(`${API_BASE_URL}/api/event/${id}`);
@@ -282,6 +289,30 @@ const DetailEvent = () => {
     };
     fetchEvent();
   }, [id]);
+
+  // función para inscribirse
+  const handleJoin = async () => {
+    setJoining(true);
+    setJoinError(null);
+    try {
+      const url = `${API_BASE_URL}/api/event/${id}/enrollment`;
+      await axios.post(
+        url,
+        {},
+        {
+          headers: {
+            "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+            "ngrok-skip-browser-warning": 1,
+          },
+        }
+      );
+      setJoined(true);
+    } catch (error) {
+      setJoinError("No se pudo inscribir en el evento.");
+    } finally {
+      setJoining(false);
+    }
+  };
 
   if (loading)
     return (
@@ -316,21 +347,19 @@ const DetailEvent = () => {
           <div style={styles.hero}>
             <div style={styles.tagRow}>
               <button
-            style={hover ? { ...styles.backBtn, ...styles.backBtnHover } : styles.backBtn}
-            onClick={() => navigate("/events/")}
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
-          >
-            ←
-          </button>
+                style={hover ? { ...styles.backBtn, ...styles.backBtnHover } : styles.backBtn}
+                onClick={() => navigate("/events/")}
+                onMouseEnter={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
+              >
+                ←
+              </button>
               <span style={styles.subtitle}>
                 {new Date(event.start_date).toLocaleDateString()} • {event.location_name}
               </span>
-              
             </div>
             <div style={styles.title}>{event.name}</div>
             <span style={styles.tag}>{event.tags ? event.tags.toUpperCase() : "EVENT"}</span>
-
             <div style={styles.desc}>{event.description}</div>
             <div style={styles.heroGrid}>
               <div style={styles.priceCard}>
@@ -351,7 +380,6 @@ const DetailEvent = () => {
                   {event.duration_in_minutes} min
                 </span>
               </div>
-        
               <div style={styles.rangeWrap}>
                 Max. assistance:
                 <input
@@ -369,13 +397,30 @@ const DetailEvent = () => {
             </div>
             <div style={styles.btnWrap}>
               {event.enabled_for_enrollment === "1" ? (
-                <button style={styles.btn}>
-                  Join
+                <button
+                  style={{
+                    ...styles.btn,
+                    ...(joining ? styles.btnDisabled : {}),
+                    ...(joined ? { background: "#169c6b", color: "#fff" } : {})
+                  }}
+                  onClick={handleJoin}
+                  disabled={joining || joined}
+                >
+                  {joining
+                    ? "Joining..."
+                    : joined
+                    ? "Joined!"
+                    : "Join"}
                 </button>
               ) : (
                 <button style={{...styles.btn, ...styles.btnDisabled}} disabled>
                   Registration disabled
                 </button>
+              )}
+              {joinError && (
+                <div style={{ color: "#d32f2f", fontWeight: 600, marginTop: 10 }}>
+                  {joinError}
+                </div>
               )}
             </div>
           </div>
@@ -403,9 +448,7 @@ const DetailEvent = () => {
                 {event.creator_user_username}
               </a>
             </div>
-            <div style={styles.organizerLabel}>
-              Organizer
-            </div>
+            <div style={styles.organizerLabel}>Organizer</div>
           </div>
           {/* CARD QUICK FACTS */}
           <div style={styles.quickFacts}>

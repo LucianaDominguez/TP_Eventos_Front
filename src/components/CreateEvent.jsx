@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from '../services/api';
-//import { useAuth } from "../context/useAuth"
 
 const CreateEvent = () => {
-  //const { user, token } = useAuth();
   const [form, setForm] = useState({
     name: "",
     description: "",

@@ -6,6 +6,7 @@ import Register from "./components/Register"
 import Login from "./components/LogIn"
 import DetailEvent from './components/DetailEvent';
 import CreateEvent from './components/CreateEvent';
+import EditEvent from './components/EditEvent';
 import { AuthProvider } from "./context/AuthContext.jsx";
 
 
@@ -20,6 +21,7 @@ function App() {
       <Route path="/events" element = {<Eventos/>}> </Route>
       <Route path="/event/:id" element={<DetailEvent />} />
       <Route path="/event/create" element={<CreateEvent />} />
+      <Route path="/event/edit/:id" element={<EditEvent />} />
 
     </Routes>
     </BrowserRouter>
