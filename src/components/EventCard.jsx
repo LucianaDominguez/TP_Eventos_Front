@@ -1,11 +1,15 @@
 import React from "react";
 import axios from "axios";
 import { API_BASE_URL } from '../services/api';
+import { useNavigate } from "react-router-dom";
+
 
 const EventCard = ({ evento, onClick}) => {
+  
+  const navigate = useNavigate();
   if (!evento) return null;
   const userID = sessionStorage.getItem("user");
-  // Formato para precio
+
   const priceTag =
     evento.price === 0
       ? "Gratis"
@@ -13,19 +17,17 @@ const EventCard = ({ evento, onClick}) => {
           minimumFractionDigits: 0,
         })}`;
 
-  // Formato para estado de inscripción
   const enrollment =
     evento.enabled_for_enrollment ? "Inscripción abierta" : "Inscripción cerrada";
 
-  // Formato para fecha y duración
   const dateStr = new Date(evento.start_date).toLocaleDateString();
   const durationStr = `${evento.duration_in_minutes} min`;
 
-  // Handler para eliminar evento
   const handleDelete = async (eventID) => {
     const url = new URL(`${API_BASE_URL}/api/event/${eventID}`);
 
     if (window.confirm("¿Estás seguro de que deseas eliminar este evento?")) {
+      
       try {
         console.log(url)
         await axios.delete(url.toString(), {
@@ -35,6 +37,9 @@ const EventCard = ({ evento, onClick}) => {
             "ngrok-skip-browser-warning": 1
           }
         });
+        setTimeout(() => {
+          navigate("/events");
+        }, 200);
       } catch (err) {
         console.log(err)
         alert("Error al eliminar el evento.");
