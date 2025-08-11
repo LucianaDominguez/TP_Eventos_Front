@@ -252,7 +252,6 @@ const styles = {
   }
 };
 
-// ...styles igual que antes...
 
 const DetailEvent = () => {
   const { id } = useParams();
@@ -267,20 +266,31 @@ const DetailEvent = () => {
   const [joinError, setJoinError] = useState(null);
   const [joined, setJoined] = useState(false);
 
+  // estado para la baja
+  const [leaving, setLeaving] = useState(false);
+  const [leaveError, setLeaveError] = useState(null);
+
+  // Consulta evento y estado de inscripción al montar
   useEffect(() => {
-    const url = new URL(`${API_BASE_URL}/api/event/${id}`);
     const fetchEvent = async () => {
+      setLoading(true);
       try {
+        const url = new URL(`${API_BASE_URL}/api/event/${id}`);
         const response = await axios.get(url.toString(), {
           responseType: "json",
           headers: {
             "ngrok-skip-browser-warning": 1,
+            "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
           },
         });
         setEvent(response.data);
         setError(null);
+
+        // MODIFICACIÓN: actualizar estado joined según is_user_enrolled
+        if (response.data.is_user_enrolled !== undefined) {
+          setJoined(response.data.is_user_enrolled);
+        }
       } catch (err) {
-        console.error("Error fetching event:", err);
         setError("Error loading event.");
         setEvent(null);
       } finally {
@@ -288,6 +298,8 @@ const DetailEvent = () => {
       }
     };
     fetchEvent();
+    // Solo depende de id
+    // eslint-disable-next-line
   }, [id]);
 
   // función para inscribirse
@@ -314,27 +326,48 @@ const DetailEvent = () => {
     }
   };
 
+  // función para des-inscribirse
+  const handleLeave = async () => {
+    setLeaving(true);
+    setLeaveError(null);
+    try {
+      const url = `${API_BASE_URL}/api/event/${id}/enrollment`;
+      await axios.delete(url, {
+        headers: {
+          "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+          "ngrok-skip-browser-warning": 1,
+        },
+      });
+      setJoined(false);
+    } catch (error) {
+      setLeaveError("No se pudo dar de baja del evento.");
+    } finally {
+      setLeaving(false);
+    }
+  };
+
   if (loading)
     return (
       <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '100vh', 
-    width: '100%',
-  }}>
-    <Riple color="#3668cf" size="large" text="" textColor="" />
-  </div>)
-   
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        width: '100%',
+      }}>
+        <Riple color="#3668cf" size="large" text="" textColor="" />
+      </div>
+    );
+
   if (error)
     return (
-      <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "80vh", color: "#d32f2f", fontSize: "19px"}}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "80vh", color: "#d32f2f", fontSize: "19px" }}>
         Error loading event.
       </div>
     );
   if (!event)
     return (
-      <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "80vh", color: "#7b8aa4", fontSize: "19px"}}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "80vh", color: "#7b8aa4", fontSize: "19px" }}>
         No event data found.
       </div>
     );
@@ -376,7 +409,7 @@ const DetailEvent = () => {
                   readOnly
                   style={styles.range}
                 />
-                <span style={{color:"#2d3b4f", fontWeight:700}}>
+                <span style={{ color: "#2d3b4f", fontWeight: 700 }}>
                   {event.duration_in_minutes} min
                 </span>
               </div>
@@ -390,36 +423,46 @@ const DetailEvent = () => {
                   readOnly
                   style={styles.range}
                 />
-                <span style={{color:"#2d3b4f", fontWeight:700}}>
+                <span style={{ color: "#2d3b4f", fontWeight: 700 }}>
                   {event.max_assistance}
                 </span>
               </div>
             </div>
             <div style={styles.btnWrap}>
               {event.enabled_for_enrollment === "1" ? (
-                <button
-                  style={{
-                    ...styles.btn,
-                    ...(joining ? styles.btnDisabled : {}),
-                    ...(joined ? { background: "#169c6b", color: "#fff" } : {})
-                  }}
-                  onClick={handleJoin}
-                  disabled={joining || joined}
-                >
-                  {joining
-                    ? "Joining..."
-                    : joined
-                    ? "Joined!"
-                    : "Join"}
-                </button>
+                !joined ? (
+                  <button
+                    style={{
+                      ...styles.btn,
+                      ...(joining ? styles.btnDisabled : {}),
+                    }}
+                    onClick={handleJoin}
+                    disabled={joining}
+                  >
+                    {joining ? "Joining..." : "Join"}
+                  </button>
+                ) : (
+                  <button
+                    style={{
+                      ...styles.btn,
+                      ...(leaving ? styles.btnDisabled : {}),
+                      background: "#d32f2f",
+                      color: "#fff"
+                    }}
+                    onClick={handleLeave}
+                    disabled={leaving}
+                  >
+                    {leaving ? "Bajando..." : "Bajarse del evento"}
+                  </button>
+                )
               ) : (
-                <button style={{...styles.btn, ...styles.btnDisabled}} disabled>
+                <button style={{ ...styles.btn, ...styles.btnDisabled }} disabled>
                   Registration disabled
                 </button>
               )}
-              {joinError && (
+              {(joinError || leaveError) && (
                 <div style={{ color: "#d32f2f", fontWeight: 600, marginTop: 10 }}>
-                  {joinError}
+                  {joinError || leaveError}
                 </div>
               )}
             </div>
@@ -440,9 +483,9 @@ const DetailEvent = () => {
               @{event.creator_user_username}
             </div>
             <div style={styles.contact}>
-              <span style={{fontWeight:600}}>Contact:</span>{" "}
+              <span style={{ fontWeight: 600 }}>Contact:</span>{" "}
               <a
-                style={{textDecoration: "underline", color: "#3668cf"}}
+                style={{ textDecoration: "underline", color: "#3668cf" }}
                 href={`mailto:${event.creator_user_username}`}
               >
                 {event.creator_user_username}
@@ -496,28 +539,28 @@ const DetailEvent = () => {
               <tr>
                 <th style={styles.th}>Venue coordinates</th>
                 <td style={styles.td}>
-                  <span style={{fontFamily:"monospace"}}>{event.event_location_latitude}</span>,{" "}
-                  <span style={{fontFamily:"monospace"}}>{event.event_location_longitude}</span>
+                  <span style={{ fontFamily: "monospace" }}>{event.event_location_latitude}</span>,{" "}
+                  <span style={{ fontFamily: "monospace" }}>{event.event_location_longitude}</span>
                 </td>
               </tr>
               <tr>
                 <th style={styles.th}>Neighborhood coordinates</th>
                 <td style={styles.td}>
-                  <span style={{fontFamily:"monospace"}}>{event.location_latitude}</span>,{" "}
-                  <span style={{fontFamily:"monospace"}}>{event.location_longitude}</span>
+                  <span style={{ fontFamily: "monospace" }}>{event.location_latitude}</span>,{" "}
+                  <span style={{ fontFamily: "monospace" }}>{event.location_longitude}</span>
                 </td>
               </tr>
               <tr>
                 <th style={styles.th}>Province coordinates</th>
                 <td style={styles.td}>
-                  <span style={{fontFamily:"monospace"}}>{event.province_latitude}</span>,{" "}
-                  <span style={{fontFamily:"monospace"}}>{event.province_longitude}</span>
+                  <span style={{ fontFamily: "monospace" }}>{event.province_latitude}</span>,{" "}
+                  <span style={{ fontFamily: "monospace" }}>{event.province_longitude}</span>
                 </td>
               </tr>
               <tr>
                 <th style={styles.th}>Tag</th>
                 <td style={styles.td}>
-                  {event.tag ? event.tag : <span style={{fontStyle:"italic", color:"#bbb"}}>No tag</span>}
+                  {event.tag ? event.tag : <span style={{ fontStyle: "italic", color: "#bbb" }}>No tag</span>}
                 </td>
               </tr>
             </tbody>
