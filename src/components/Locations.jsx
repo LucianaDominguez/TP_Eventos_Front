@@ -1,72 +1,54 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import EventCard from './EventCard';
+import LocationCard from './LocationCard';
 import { API_BASE_URL } from '../services/api';
 import { useNavigate } from "react-router-dom";
 import { Riple } from 'react-loading-indicators';
 
 
-const defaultFilters = { id: '', date: '', tag: '', name: '' };
+const defaultFilters = {
+  id: '',
+  date: '',
+  tag: '',
+  name: ''
+};
 
 
-const EventList = () => {
-  const [events, setEvents] = useState([]);
+const LocationList = () => {
+  const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState(defaultFilters);
   const navigate = useNavigate();
 
 
   useEffect(() => {
-    const getEvents = async () => {
+    const getLocations = async () => {
       try {
-        const url = new URL(`${API_BASE_URL}/api/event`);
+        const url = new URL(`${API_BASE_URL}/api/event-locations`);
         let response = await axios.get(url.toString(), {
           responseType: 'json',
           headers: {
+            "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
             "ngrok-skip-browser-warning": 1
           }
         });
-        setEvents(Array.isArray(response.data) ? response.data : []);
+        setLocations(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
-        console.error('Error al cargar los eventos:', error);
+        console.error('Err:', error);
       } finally {
         setLoading(false);
       }
     };
-    getEvents();
-
-
-    //console.log(events.rows.id_creator_user)
+    getLocations();
   }, []);
 
 
-  // Filtrado compuesto
-  const filteredEvents = events.filter(event => {
-    if (filters.id && !String(event.id).toLowerCase().includes(filters.id.toLowerCase())) return false;
-    if (filters.date) {
-      let eventDateString = "";
-      if (event.start_date) {
-        try {
-          eventDateString = new Date(event.start_date).toISOString().slice(0, 10);
-        } catch (e) {
-          console.error('Error parsing event date:', e);
-        }
-      }
-      if (!event.start_date || eventDateString !== filters.date) return false;
-    }
-    if (filters.tag) {
-      if (Array.isArray(event.tags)) {
-        if (!event.tags.some(t => t.toLowerCase().includes(filters.tag.toLowerCase()))) return false;
-      } else if (!String(event.tags || '').toLowerCase().includes(filters.tag.toLowerCase())) {
-        return false;
-      }
-    }
-    if (filters.name) {
-      const nameFields = [event.title, event.name];
-      if (!nameFields.some(f => f && f.toLowerCase().includes(filters.name.toLowerCase()))) {
-        return false;
-      }
-    }
+  // Filtrado compuesto (puedes agregar filtros sobre los campos nuevos si quieres)
+  const filteredLocations = locations.filter(location => {
+    if (filters.id && !String(location.id).toLowerCase().includes(filters.id.toLowerCase())) return false;
+    if (filters.name && !String(location.name || '').toLowerCase().includes(filters.name.toLowerCase())) return false;
+    if (filters.tag && !String(location.tag || '').toLowerCase().includes(filters.tag.toLowerCase())) return false;
+    if (filters.date && !String(location.date || '').toLowerCase().includes(filters.date.toLowerCase())) return false;
     return true;
   });
 
@@ -84,18 +66,18 @@ const EventList = () => {
   };
 
 
-  if (loading) return <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '100vh',
-    width: '100%',
-  }}>
-    <Riple color="#3668cf" size="large" text="" textColor="" />
-  </div>;
+  if (loading) return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      width: '100%',
+    }}>
+      <Riple color="#3668cf" size="large" text="" textColor="" />
+    </div>
+  );
  
-
-
   return (
     <div style={{
       width: '100%',
@@ -109,7 +91,6 @@ const EventList = () => {
         alignItems: 'center',
         marginBottom: 30
       }}>
-       
         <div style={{
           display: 'flex',
           gap: 20,
@@ -121,14 +102,12 @@ const EventList = () => {
           boxShadow: '0 2px 12px rgba(60,72,88,0.10)',
           marginBottom: 18,
           marginLeft: 165,
-
-
         }}>
           <span style={{
-          fontWeight: 800,
-          fontSize: '1.5rem',
-          color: '#3668cf',
-        }}>Clevent</span>
+            fontWeight: 800,
+            fontSize: '1.5rem',
+            color: '#3668cf',
+          }}>Clevent</span>
           <input
             type="text"
             name="id"
@@ -158,7 +137,7 @@ const EventList = () => {
               fontSize: '0.9rem',
               background: '#f5f7fa',
               transition: 'border .2s',
-              outline: 'none0',
+              outline: 'none',
               color: '#b0b8c1'
             }}
           />
@@ -239,11 +218,28 @@ const EventList = () => {
         alignItems: 'start',
         marginTop: 20
       }}>
-        {filteredEvents.map(event => (
-          <EventCard
-            key={event.id}
-            evento={event}
-            onClick={() => navigate(`/event/${event.id}`, { state: { event } })}
+        {filteredLocations.map(location => (
+          <LocationCard
+            key={location.id}
+            // Info de event_location
+            id={location.id}
+            name={location.name}
+            full_address={location.full_address}
+            max_capacity={location.max_capacity}
+            latitude={location.latitude}
+            longitude={location.longitude}
+            // Info de locations
+            location_name={location.location_name}
+            location_latitude={location.location_latitude}
+            location_longitude={location.location_longitude}
+            // Info de provincias
+            province_name={location.province_name}
+            province_full_name={location.province_full_name}
+            province_latitude={location.province_latitude}
+            province_longitude={location.province_longitude}
+            // Info del creador
+            creator_username={location.creator_username}
+            onClick={() => navigate(`/event/${location.id}`, { state: { location } })}
           />
         ))}
       </div>
@@ -285,7 +281,6 @@ const EventList = () => {
         <svg width="34" height="34" fill="currentColor" viewBox="0 0 20 20">
           <circle cx="10" cy="10" r="9" />
           <path d="M10 6v8M6 10h8" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
-       
         </svg>
       </button>
 
@@ -318,4 +313,4 @@ const EventList = () => {
 };
 
 
-export default EventList;
+export default LocationList;

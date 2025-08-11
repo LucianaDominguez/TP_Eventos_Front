@@ -7,7 +7,10 @@ import Login from "./components/LogIn"
 import DetailEvent from './components/DetailEvent';
 import CreateEvent from './components/CreateEvent';
 import EditEvent from './components/EditEvent';
+import Locations from './components/Locations';
 import { AuthProvider } from "./context/AuthContext.jsx";
+
+
 
 
 function App() {
@@ -22,13 +25,18 @@ function App() {
       <Route path="/event/:id" element={<DetailEvent />} />
       <Route path="/event/create" element={<CreateEvent />} />
       <Route path="/event/edit/:id" element={<EditEvent />} />
+      <Route path="/event/locations" element={<Locations />} />
+
 
     </Routes>
     </BrowserRouter>
     </AuthProvider>
 
+
     </>
   );
 }
 
+
 export default App;
+
