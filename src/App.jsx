@@ -7,7 +7,8 @@ import Login from "./components/LogIn"
 import DetailEvent from './components/DetailEvent';
 import CreateEvent from './components/CreateEvent';
 import EditEvent from './components/EditEvent';
-import Locations from './components/Locations';
+import Locations from './components/Locations'; 
+import CreateLocation from './components/CreateLocation';
 import { AuthProvider } from "./context/AuthContext.jsx";
 
 
@@ -26,6 +27,7 @@ function App() {
       <Route path="/event/create" element={<CreateEvent />} />
       <Route path="/event/edit/:id" element={<EditEvent />} />
       <Route path="/event/locations" element={<Locations />} />
+      <Route path="/event/locations/create" element={<CreateLocation />}></Route>
 
 
     </Routes>
