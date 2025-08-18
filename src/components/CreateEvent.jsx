@@ -311,10 +311,11 @@ const styles = {
     color: "#212b36",
   },
   welcome: {
-    fontSize: "22px",
+    fontSize: "2.5em",
     fontWeight: "700",
+    color: "#5546A7",
+    letterSpacing: "0.02em",
     margin: "0 0 10px 0",
-    color: "#212b36",
   },
   field: {
     marginBottom: "18px",
@@ -325,7 +326,7 @@ const styles = {
     padding: "10px",
     fontSize: "16px",
     border: "none",
-    borderBottom: "2px solid #e0e0e0",
+    borderBottom: "none",
     borderRadius: "0",
     outline: "none",
     background: "#f7f7f7",
@@ -336,7 +337,7 @@ const styles = {
   button: {
     width: "100%",
     padding: "12px",
-    background: "#212b36",
+    background: "linear-gradient(135deg, #5546A7 60%, #56CCF2 100%)",
     color: "#fff",
     border: "none",
     borderRadius: "6px",

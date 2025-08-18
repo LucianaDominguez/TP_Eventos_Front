@@ -248,7 +248,7 @@ const LocationList = () => {
       {/* Botón flotante para crear evento */}
       <button
         title="Crear nuevo evento"
-        onClick={() => navigate("/event/create")}
+        onClick={() => navigate("/event/locations/create")}
         style={{
           position: 'fixed',
           bottom: 32,

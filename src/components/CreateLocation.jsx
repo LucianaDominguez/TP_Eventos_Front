@@ -9,6 +9,8 @@ const CreateEventLocation = () => {
     full_address: "",
     id_location: "",
     max_capacity: "",
+    latitude: "",
+    longitude: ""
   });
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
@@ -36,6 +38,10 @@ const CreateEventLocation = () => {
       newErrors.id_location = "ID de Location requerido";
     if (!form.max_capacity || isNaN(form.max_capacity) || Number(form.max_capacity) <= 0)
       newErrors.max_capacity = "Capacidad debe ser mayor a 0";
+    if (!form.latitude || isNaN(Number(form.latitude)))
+      newErrors.latitude = "Latitud requerida y debe ser numérica";
+    if (!form.longitude || isNaN(Number(form.longitude)))
+      newErrors.longitude = "Longitud requerida y debe ser numérica";
     return newErrors;
   };
 
@@ -90,7 +96,7 @@ const CreateEventLocation = () => {
     <div style={styles.layout}>
       <div style={styles.rightSection}>
         <div style={styles.formContainer}>
-          <h3 style={styles.welcome}>Nueva Locación</h3>
+          <h3 style={styles.welcome}>New location </h3>
           <form onSubmit={handleSubmit}>
             <div style={styles.field}>
               <input
@@ -99,7 +105,7 @@ const CreateEventLocation = () => {
                 value={form.name}
                 onChange={handleChange}
                 style={styles.input}
-                placeholder="Nombre de la locación"
+                placeholder="Location name"
               />
               {errors.name && <span style={styles.error}>{errors.name}</span>}
             </div>
@@ -110,7 +116,7 @@ const CreateEventLocation = () => {
                 value={form.full_address}
                 onChange={handleChange}
                 style={styles.input}
-                placeholder="Dirección completa"
+                placeholder="Full adress"
               />
               {errors.full_address && <span style={styles.error}>{errors.full_address}</span>}
             </div>
@@ -121,7 +127,7 @@ const CreateEventLocation = () => {
                 value={form.id_location}
                 onChange={handleChange}
                 style={styles.input}
-                placeholder="ID Location"
+                placeholder="Location ID "
               />
               {errors.id_location && <span style={styles.error}>{errors.id_location}</span>}
             </div>
@@ -132,12 +138,34 @@ const CreateEventLocation = () => {
                 value={form.max_capacity}
                 onChange={handleChange}
                 style={styles.input}
-                placeholder="Capacidad máxima"
+                placeholder="Max. Cappacity"
                 min={1}
               />
               {errors.max_capacity && <span style={styles.error}>{errors.max_capacity}</span>}
             </div>
-            <button type="submit" style={styles.button}>Crear Locación</button>
+            <div style={styles.field}>
+              <input
+                type="text"
+                name="latitude"
+                value={form.latitude}
+                onChange={handleChange}
+                style={styles.input}
+                placeholder="Latitude (ej: -34.603722)"
+              />
+              {errors.latitude && <span style={styles.error}>{errors.latitude}</span>}
+            </div>
+            <div style={styles.field}>
+              <input
+                type="text"
+                name="longitude"
+                value={form.longitude}
+                onChange={handleChange}
+                style={styles.input}
+                placeholder="Longitude (ej: -58.381592)"
+              />
+              {errors.longitude && <span style={styles.error}>{errors.longitude}</span>}
+            </div>
+            <button type="submit" style={styles.button}>Create location</button>
             {success && (
               <div style={styles.success}>¡Locación creada exitosamente!</div>
             )}
@@ -155,6 +183,7 @@ const styles = {
     fontFamily: "'Inter', 'Roboto', Arial, sans-serif",
     background: "#f4f6f8",
     justifyContent:"center",
+    marginLeft:650,
   },
   rightSection: {
     flex: 1,
@@ -177,10 +206,11 @@ const styles = {
     justifyContent:"center"
   },
   welcome: {
-    fontSize: "22px",
+    fontSize: "2.5em",
     fontWeight: "700",
+    color: "#5546A7",
+    letterSpacing: "0.02em",
     margin: "0 0 10px 0",
-    color: "#212b36",
   },
   field: {
     marginBottom: "18px",
@@ -191,8 +221,8 @@ const styles = {
     padding: "10px",
     fontSize: "16px",
     border: "none",
-    borderBottom: "2px solid #e0e0e0",
-    borderRadius: "0",
+    borderBottom: "none",
+    borderRadius: "5",
     outline: "none",
     background: "#f7f7f7",
     marginBottom: "2px",
@@ -202,7 +232,7 @@ const styles = {
   button: {
     width: "100%",
     padding: "12px",
-    background: "#212b36",
+    background: "linear-gradient(135deg, #5546A7 60%, #56CCF2 100%)",
     color: "#fff",
     border: "none",
     borderRadius: "6px",
