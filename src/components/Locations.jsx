@@ -104,10 +104,12 @@ const LocationList = () => {
           marginLeft: 165,
         }}>
           <span style={{
-            fontWeight: 800,
-            fontSize: '1.5rem',
-            color: '#3668cf',
-          }}>Clevent</span>
+          fontWeight: 800,
+          fontSize: '1.5rem',
+          color: '#3668cf',
+          }
+        }
+        onClick={() => navigate(`/events`)}>Clevent</span>
           <input
             type="text"
             name="id"

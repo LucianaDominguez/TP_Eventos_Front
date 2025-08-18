@@ -128,7 +128,9 @@ const EventList = () => {
           fontWeight: 800,
           fontSize: '1.5rem',
           color: '#3668cf',
-        }}>Clevent</span>
+          }
+        }
+        onClick={() => navigate(`/events`)}>Clevent</span>
           <input
             type="text"
             name="id"
