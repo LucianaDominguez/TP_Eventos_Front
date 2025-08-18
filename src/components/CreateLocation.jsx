@@ -57,9 +57,10 @@ const CreateEventLocation = () => {
     setSuccess(false);
 
     const token = sessionStorage.getItem("token");
-    const userID = localStorage.getItem("user");
+    const userID = sessionStorage.getItem("user");
 
-    const url = new URL(`${API_BASE_URL}/api/event-location/`);
+    const url = new URL(`${API_BASE_URL}/api/event-locations/`);
+    console.log(userID)
 
     try {
       await axios.post(
@@ -79,7 +80,7 @@ const CreateEventLocation = () => {
 
       setSuccess(true);
       setTimeout(() => {
-        navigate("/event-locations");
+        navigate("/event/locations");
       }, 600);
     } catch (err) {
       setErrors({

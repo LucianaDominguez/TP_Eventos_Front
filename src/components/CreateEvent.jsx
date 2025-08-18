@@ -231,6 +231,7 @@ const styles = {
     fontFamily: "'Inter', 'Roboto', Arial, sans-serif",
     background: "#f4f6f8",
     justifyContent:"center",
+    marginLeft:650,
   },
   leftSection: {
     flex: 1,
