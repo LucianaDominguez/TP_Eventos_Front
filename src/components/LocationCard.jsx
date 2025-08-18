@@ -1,30 +1,22 @@
 import React, { useState } from 'react';
 
-
+// MAPA ESTILO IMAGEN + PIN
 const MapPreview = ({ latitude, longitude }) => (
   <div style={styles.mapPreview}>
-    <a
-      href={`https://maps.google.com/?q=${latitude},${longitude}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={styles.mapLink}
-      title="Ver en Google Maps"
-    >
-      <div style={styles.mapText}>
-        MAPA
-        <div style={styles.coordsLabel}>
-          <span style={{ fontSize: "0.92em", color: "#888", fontWeight: 500 }}>
-            {latitude}, {longitude}
-          </span>
-        </div>
-        <div style={styles.mapBtn}>
-          Abrir en Google Maps
-        </div>
-      </div>
-    </a>
+    {/* Imagen de mapa de fondo */}
+    <img
+      src="https://t4.ftcdn.net/jpg/03/38/37/73/360_F_338377354_1Y6oyGrvaae2kqY3YS07b6X4NDKZntne.jpg"
+      alt="Mapa"
+      style={styles.mapImage}
+    />
+    {/* Pin rojo centrado */}
+    <div style={styles.pinIcon}>
+      <svg height="40" width="40" viewBox="0 0 24 24" fill="#F44336">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM12 11.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+      </svg>
+    </div>
   </div>
 );
-
 
 const LocationCard = ({
   id,
@@ -42,25 +34,14 @@ const LocationCard = ({
   province_latitude,
   province_longitude,
   creator_username,
-  onClick
 }) => {
-  const [showCoords, setShowCoords] = useState({
-    event: false,
-    location: false,
-    province: false
-  });
-
-
-  const handleToggle = key => {
-    setShowCoords(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
+  const handleCardClick = (e) => {
+    e.stopPropagation();
+    window.open(`https://maps.google.com/?q=${location_latitude},${location_longitude}`, '_blank', 'noopener,noreferrer');
   };
 
-
   return (
-    <div style={styles.card} onClick={onClick}>
+    <div style={styles.card} onClick={handleCardClick}>
       <div style={styles.gradientBorder}>
         <div style={styles.content}>
           {/* Title & Capacity */}
@@ -70,24 +51,18 @@ const LocationCard = ({
               <span style={styles.subTitle}>{province_name} / {location_name}</span>
             </div>
           </div>
-          {/* Mapa y dirección estilo tarjeta */}
+          {/* MAPA y dirección estilo imagen */}
           <div style={styles.mapCard}>
             <MapPreview latitude={latitude} longitude={longitude} />
             <div style={styles.mapAddressBlock}>
-              <span style={styles.mapAddressLabel}>Dirección</span>
               <span style={styles.mapAddressText}>{full_address}</span>
             </div>
           </div>
-          {/* Distribution: three columns */}
+          {/* Capacity */}
           <div style={styles.flexRow}>
-            
-            <div
-              style={styles.infoColumn}
-              onClick={e => { e.stopPropagation(); handleToggle('location'); }}
-              title="Mostrar coordenadas de location"
-            >
+            <div style={styles.infoColumn}>
               <div style={styles.cap}>
-              <div style={styles.sectionTitle}>Capacity</div>
+                <div style={styles.sectionTitle}>Capacity</div>
                 <span style={styles.capacityBadge}>{max_capacity}</span>
               </div>
             </div>
@@ -104,7 +79,6 @@ const LocationCard = ({
     </div>
   );
 };
-
 
 const styles = {
   card: {
@@ -182,73 +156,60 @@ const styles = {
     width: "100%"
   },
   mapCard: {
-    background: "#e2e2e2",
+    background: "#fff",
     borderRadius: "14px",
     overflow: "hidden",
     margin: "10px 0 18px 0",
     boxShadow: "0 2px 7px rgba(60,72,88,0.10)",
-    width: "50%",
+    width: "100%",
     maxWidth: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   mapPreview: {
-    height: 150,
+    height: 155,
     width: "100%",
+    position: "relative",
     background: "#d3d3d3",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "2.1rem",
-    fontWeight: "800",
-    color: "#222",
-    letterSpacing: "0.04em",
-    position: "relative",
     borderTopLeftRadius: 14,
-    borderTopRightRadius: 14
+    borderTopRightRadius: 14,
+    overflow: "hidden"
   },
-  mapText: {
-    textAlign: "center"
-  },
-  coordsLabel: {
-    marginTop: "8px",
-    fontSize: "0.98rem",
-    fontWeight: "600",
-    color: "#888"
-  },
-  mapBtn: {
-    marginTop: "10px",
-    background: "#3668cf",
-    color: "#fff",
-    padding: "7px 15px",
-    borderRadius: "8px",
-    fontWeight: "600",
-    fontSize: "1em",
-    boxShadow: "0 2px 10px rgba(54,104,207,0.11)",
-    display: "inline-block"
-  },
-  mapLink: {
-    textDecoration: "none",
+  mapImage: {
     width: "100%",
     height: "100%",
-    display: "block"
+    objectFit: "cover",
+    display: "block",
+  },
+  pinIcon: {
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -70%)",
+    zIndex: 2,
+    pointerEvents: "none"
   },
   mapAddressBlock: {
+    width: "100%",
     background: "#fff",
-    padding: "10px 18px",
+    padding: "16px 18px 11px",
     borderBottomLeftRadius: "14px",
     borderBottomRightRadius: "14px",
     borderTop: "1px solid #ececec",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.03)"
-  },
-  mapAddressLabel: {
-    fontWeight: "700",
-    color: "#222",
-    marginRight: "10px",
-    fontSize: "1.07em",
-    letterSpacing: "0.02em"
+    boxShadow: "0 2px 6px rgba(0,0,0,0.03)",
+    textAlign: "left",
+    paddingLeft:35,
+
   },
   mapAddressText: {
     color: "#444",
-    fontSize: "1.03em"
+    fontSize: "1.08em",
+    fontWeight: "600",
+    letterSpacing: "0.01em",
   },
   flexRow: {
     display: "flex",
@@ -277,30 +238,6 @@ const styles = {
     fontSize: "1.01rem",
     marginBottom: "3px"
   },
-  smallLabel: {
-    color: "#7d98e4",
-    fontWeight: "600",
-    fontSize: "0.96em",
-    marginRight: "5px"
-  },
-  coordsToggle: {
-    marginTop: "6px"
-  },
-  toggleText: {
-    fontSize: "0.92em",
-    color: "#B16CEA",
-    fontWeight: "500",
-    cursor: "pointer"
-  },
-  coordsBox: {
-    marginTop: "4px",
-    fontSize: "0.97em",
-    background: "#eaf6fb",
-    borderRadius: "6px",
-    padding: "3px 7px",
-    color: "#3668cf",
-    fontWeight: "500"
-  },
   footerRow: {
     fontSize: "1.01rem",
     color: "#7d98e4",
@@ -324,6 +261,5 @@ const styles = {
     fontWeight: "600"
   },
 };
-
 
 export default LocationCard;

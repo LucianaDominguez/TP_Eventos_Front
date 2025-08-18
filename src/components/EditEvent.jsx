@@ -178,7 +178,7 @@ const EditEventView = () => {
 
 const styles = {
   container: {
-    maxWidth: 430,
+    maxWidth: 930,
     margin: "36px auto",
     padding: "32px",
     background: "linear-gradient(135deg, #eaf6fb 0%, #f6eaff 100%)",

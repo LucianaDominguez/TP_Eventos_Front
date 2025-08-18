@@ -452,7 +452,7 @@ const DetailEvent = () => {
                     onClick={handleLeave}
                     disabled={leaving}
                   >
-                    {leaving ? "Bajando..." : "Bajarse del evento"}
+                    {leaving ? "Leaving..." : "Leave"}
                   </button>
                 )
               ) : (
